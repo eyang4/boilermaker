@@ -20,6 +20,14 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      // use these specific loaders for files matching this
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
       }
     ]
   }

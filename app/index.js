@@ -1,8 +1,15 @@
+import '../public/index.css'
+
 import React from 'react'
-// SELF-NOTE: test what happens when we remove the above line
+// React is required for the JSX of the first argument of ReactDOM.render()
 import ReactDOM from 'react-dom'
+import store from './store'
+import {Provider} from 'react-redux'
 
 ReactDOM.render(
-  <div>Hello from React</div>,
+  <Provider store={store}>
+    <div>Hello from React</div>
+  </Provider>,
   document.getElementById('app')
 )
+// note the store is encapsulated in an object
