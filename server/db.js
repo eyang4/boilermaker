@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost:5432/boilermaker', {logging: false})
 // Heroku environment will have a DATABASE_URL but local development wont
-
 const crypto = require('crypto')
 /*
 hashing and salting:
@@ -21,6 +20,7 @@ if hash matches the one in the database, authenticate
 
 "always hash on the server" - in case you receive plaintext
 */
+
 const User = db.define('User', {
   username: {
     type: Sequelize.STRING,
@@ -31,12 +31,13 @@ const User = db.define('User', {
   },
   email: {
     type: Sequelize.STRING,
-    allowNull: false,
+    // allowNull: false,
     validate: {
+      // notEmpty: true
       isEmail: true
     }
   },
-  hash: {
+  password: {
     type: Sequelize.TEXT,
     allowNull: false,
     validate: {
@@ -44,10 +45,11 @@ const User = db.define('User', {
     }
   },
   salt: {
+    // salt is initially null
     type: Sequelize.TEXT,
-    allowNull: false,
+    // allowNull: false,
     validate: {
-      notEmpty: true
+      // notEmpty: true
     }
   }
 }, {
@@ -59,7 +61,7 @@ const User = db.define('User', {
 
 User.prototype.correctPassword = function(providedPass) {
   // returns if hashed providedPass matches hash
-  return this.Model.encryptPassword(providedPass, this.salt) === this.password
+  return User.encryptPassword(providedPass, this.salt) === this.password
 }
 
 // sanitize method that trims the information sent to the client, uses lodash module
@@ -72,15 +74,15 @@ User.generateSalt = function() {
 
 User.encryptPassword = function(password, salt) {
   // generates hash whenever called
-  crypto.createHash('sha256')
-        .update(password)
-        .update(salt)
-        .digest('hex')
+  return crypto.createHash('sha256')
+               .update(password)
+               .update(salt)
+               .digest('hex')
 }
 
 function setSaltAndPassword (user) {
   if (user.changed('password')) {
-    // checks if the value for field password is different from previusDataValues
+    // checks if the value for field password is different from previousDataValues
     user.salt = User.generateSalt()
     user.password = User.encryptPassword(user.password, user.salt)
   }
@@ -121,3 +123,4 @@ module.exports = {
   Model1,
   Model2
 }
+// placed at the end, after all variables are initialized

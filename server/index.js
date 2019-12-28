@@ -1,8 +1,10 @@
 const app = require('./app')
 const {db} = require('./db')
+const PORT = 8080
 
-require('express')().use(app)
-
-db.sync()
-  .then(() => {app.listen(8080, () => console.log('PORT: 8080'))})
-
+db.sync({force: true})
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(`PORT: ${PORT}`)
+    )
+  })

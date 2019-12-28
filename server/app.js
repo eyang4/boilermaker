@@ -1,17 +1,17 @@
 const express = require('express')
 const app = express()
+const path = require('path')
 const morgan = require('morgan')
 const session = require('express-session')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 // associate our permanent session storage solution with the session
-const {db, Model1, Model2} = require('./db')
+const {db, User, Model1, Model2} = require('./db')
 const dbStore = new SequelizeStore({db})
 // instantiate our permanent session storage solution with the database it will be using
-dbStore.sync()
-// have SequelizeStore create and sync the table/model in the database
 const passport = require('passport')
 
-const path = require('path')
+dbStore.sync({force: true})
+// have SequelizeStore create and sync the table/model in the database
 app.use(express.static(path.join(__dirname, '../public/')))
 // express.static defines the directory on the server to be accessed
 // by a request for a specific directory from a client
@@ -21,7 +21,8 @@ app.use(express.static(path.join(__dirname, '../public/')))
 app.use(morgan('dev'))
 // dev defines concise output that is colored
 app.use(express.urlencoded({extended: true}))
-app.use(express.json)
+app.use(express.json())
+// remember to invoke
 
 app.use(
   session({
@@ -45,8 +46,9 @@ passport.serializeUser((user, done) => {
   }
 })
 
-passport.deserializeUser((id) => {
-  User.findById(id)
+passport.deserializeUser((id, done) => {
+  User.findByPk(id)
+      // findById is an unidentified method
       .then(user => done(null, user))
       .catch(done)
 })

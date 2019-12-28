@@ -22,12 +22,12 @@ router.put('/login', (req, res, next) => {
 })
 
 router.post('/signup', (req, res, next) => {
-  console.log('hit')
   // we use post because we are adding an entry to an entire table/model/collection
   const username = req.body.username
   const info = {password: req.body.password}
-  User.findOrCreate({where: username, defaults: info})
+  User.findOrCreate({where: {username}, defaults: info})
       .then(([user, created]) => {
+        // .spread is not required but is useful
         if (!created) res.sendStatus(401)
         else req.login(user, err => err ? next(err) : res.json(user))
       })
@@ -36,6 +36,5 @@ router.post('/signup', (req, res, next) => {
 
 router.delete('/logout', (req, res, next) => {
   req.logout()
-  req.session.destroy(err => err ? next(err) : req.sendStatus(204))
-  req.sendStatus(204)
+  req.session.destroy(err => err ? next(err) : res.sendStatus(204))
 })
