@@ -6,9 +6,20 @@ import ReactDOM from 'react-dom'
 import store from './store'
 import {Provider} from 'react-redux'
 
+const handleSubmit = (evt) => {
+}
+
 ReactDOM.render(
   <Provider store={store}>
-    <div>Hello from React</div>
+    <div>
+      <form>
+        <label htmlFor='username'>Username</label>
+        <input type='text' name='username'/>
+        <label htmlFor='password'>Password</label>
+        <input type='text' name='password'/>
+        <button onSubmit={handleSubmit}>Submit</button>
+      </form>
+    </div>
   </Provider>,
   document.getElementById('app')
 )

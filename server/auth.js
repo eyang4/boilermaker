@@ -3,6 +3,8 @@ const router = express.Router()
 const {db, User, Model1, Model2} = require('./db')
 module.exports = router
 
+router.use('/oauth', require('./oauth'))
+
 router.get('/me', (req, res, next) => {
   // dont need to test for existence of req.user, if it does not exist, return that
   res.json(req.user)

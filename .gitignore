@@ -1,4 +1,5 @@
 node_modules
 wpbundle.js
 wpbundle.js.map
+secret.js
 .log

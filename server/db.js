@@ -23,10 +23,11 @@ if hash matches the one in the database, authenticate
 
 const User = db.define('User', {
   username: {
+    // excludes oauth logins
     type: Sequelize.STRING,
-    allowNull: false,
+    // allowNull: false,
     validate: {
-      notEmpty: true
+      // notEmpty: true
     }
   },
   email: {
@@ -39,9 +40,9 @@ const User = db.define('User', {
   },
   password: {
     type: Sequelize.TEXT,
-    allowNull: false,
+    // allowNull: false,
     validate: {
-      notEmpty: true
+      // notEmpty: true
     }
   },
   salt: {
@@ -51,7 +52,8 @@ const User = db.define('User', {
     validate: {
       // notEmpty: true
     }
-  }
+  },
+  googleId: Sequelize.STRING
 }, {
   hooks: {
     beforeCreate: setSaltAndPassword,
